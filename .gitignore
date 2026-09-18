@@ -1,0 +1,8 @@
+__pycache__/
+.env
+
+# Google service-account key. This repo is PUBLIC -- the key must never be
+# committed. On Actions it arrives as the GOOGLE_SERVICE_ACCOUNT_JSON secret.
+service-account.json
+gcp-key*.json
+*-*.json.key

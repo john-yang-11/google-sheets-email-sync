@@ -1,0 +1,287 @@
+"""Shared listing logic: fetch the community repos, decide what counts.
+
+Lifted verbatim from the watcher in john-yang-11/job-alert so the two stay
+consistent about what a Summer-2027 US software internship is. Only the parts
+the sheet sync needs came across -- no Discord, Poke or buffer code, and no
+seen-file handling; this repo alerts nobody.
+"""
+
+import csv
+import io
+import json
+import os
+import re
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+import requests
+
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+# local runs: load KEY=VALUE lines from a git-ignored .env (Actions uses secrets)
+_env_file = Path(__file__).parent / ".env"
+if _env_file.exists():
+    for _line in _env_file.read_text(encoding="utf-8-sig").splitlines():
+        if "=" in _line and not _line.lstrip().startswith("#"):
+            _k, _v = _line.split("=", 1)
+            os.environ.setdefault(_k.strip(), _v.strip())
+
+
+# Community internship repos to watch. Both publish the same listings.json schema
+# (id/company_name/title/url/active/is_visible); we read them in one pass and
+# dedup across them.
+# Only Summer 2027 is tracked (see is_target_season below). SimplifyJobs opened
+# its Summer2027 repo some time before 2026-07-31 and is back in; it is by far
+# the larger feed (~14.6k listings vs ~330) and at the time it was re-added it
+# carried 16 Summer-2027 watchlist matches the CSCareers repo did not have.
+SOURCES = [
+    ("Simplify", "https://raw.githubusercontent.com/SimplifyJobs/Summer2027-Internships/dev/.github/scripts/listings.json"),
+    ("CSCareers", "https://raw.githubusercontent.com/vanshb03/Summer2027-Internships/dev/.github/scripts/listings.json"),
+]
+
+ROOT = Path(__file__).parent
+STATE_DIR = ROOT / "state"
+
+WATCHLIST_FILE = ROOT / "watchlist.txt"
+# Every match, kept long enough for the once-a-day sheet sync to read it. The
+# alert path is fire-and-forget -- a listing is announced and then only its id
+# survives, in the seen-file -- so sheet_sync.py had no way to learn what was
+# found between its runs. Both lanes append here; sheet_sync.py only reads.
+FOUND_LOG = STATE_DIR / "found_log.json"
+FOUND_LOG_MAX = 2000         # newest-last ring buffer; ~a month of matches
+
+def clean_keyword(raw: str) -> str:
+    # drop parenthetical notes like "(JSIP)jane street" -> "jane street"
+    return re.sub(r"\([^)]*\)", "", raw).strip()
+
+def load_watchlist() -> list[str]:
+    csv_url = os.environ.get("WATCHLIST_CSV_URL")
+    if csv_url:
+        resp = requests.get(csv_url, timeout=30)
+        resp.raise_for_status()
+        rows = list(csv.reader(io.StringIO(resp.text)))
+        # first column of each row; skip a header row if it looks like one
+        keywords = []
+        for i, row in enumerate(rows):
+            if not row or not row[0].strip():
+                continue
+            cell = clean_keyword(row[0])
+            if not cell:
+                continue
+            if i == 0 and any(w in cell.lower() for w in ("company", "keyword", "watchlist", "name")):
+                continue
+            keywords.append(cell)
+        return keywords
+    if WATCHLIST_FILE.exists():
+        lines = WATCHLIST_FILE.read_text(encoding="utf-8").splitlines()
+        cleaned = (clean_keyword(l) for l in lines if l.strip() and not l.strip().startswith("#"))
+        return [k for k in cleaned if k]
+    return []
+
+def matches(listing: dict, keywords: list[str]) -> bool:
+    # whole-word match so "visa" doesn't hit "TelevisaUnivision"
+    haystack = f"{listing.get('company_name', '')} {listing.get('title', '')}".lower()
+    return any(re.search(rf"\b{re.escape(kw.lower())}\b", haystack) for kw in keywords)
+
+# --- Season / location rules: only Summer 2027, only US roles ---------------
+TARGET_SEASON = "summer"
+TARGET_YEAR = "2027"
+
+US_STATE_ABBRS = {
+    "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID",
+    "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS",
+    "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK",
+    "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV",
+    "WI", "WY", "DC", "PR",
+}
+NON_US_HINTS = (
+    "canada", "united kingdom", "england", "scotland", "wales", "ireland",
+    "india", "germany", "france", "spain", "italy", "netherlands", "poland",
+    "mexico", "brazil", "china", "japan", "singapore", "australia",
+    "new zealand", "switzerland", "sweden", "norway", "denmark", "finland",
+    "austria", "belgium", "portugal", "israel", "united arab emirates",
+    "philippines", "vietnam", "indonesia", "malaysia", "thailand", "korea",
+    "taiwan", "hong kong", "argentina", "chile", "colombia", "peru", "egypt",
+    "south africa", "nigeria", "kenya", "romania", "ukraine", "russia",
+    "turkey", "greece", "czech", "hungary", "pakistan", "bangladesh",
+    # Latin America beyond the big three above. Mastercard's campus board is
+    # mostly these, and without them "San-Jose-Costa-Rica" reads as US: the
+    # hints miss it, then the trailing token isn't a state abbreviation, so it
+    # falls through to the "unrecognized defaults to US" rule.
+    # Deliberately omitting Panama and Jamaica -- Panama City FL and Jamaica NY
+    # are real US locations, and a hint beats a state check in _is_us_text.
+    "costa rica", "dominican republic", "el salvador", "guatemala",
+    "honduras", "nicaragua", "uruguay", "paraguay", "bolivia", "ecuador",
+    "venezuela",
+    # Seen on current intern postings with no hint to catch them.
+    "bulgaria", "croatia", "serbia", "slovakia", "slovenia", "lithuania",
+    "latvia", "estonia", "luxembourg", "iceland", "morocco", "tunisia",
+    "qatar", "saudi arabia", "jordan", "lebanon", "sri lanka", "nepal",
+    "cambodia", "kazakhstan", "manila",
+)
+
+US_STATE_NAMES = (
+    "alabama", "alaska", "arizona", "arkansas", "california", "colorado",
+    "connecticut", "delaware", "florida", "hawaii", "idaho", "illinois",
+    "indiana", "iowa", "kansas", "kentucky", "louisiana", "maine", "maryland",
+    "massachusetts", "michigan", "minnesota", "mississippi", "missouri",
+    "montana", "nebraska", "nevada", "new hampshire", "new jersey",
+    "new mexico", "new york", "north carolina", "north dakota", "ohio",
+    "oklahoma", "oregon", "pennsylvania", "rhode island", "south carolina",
+    "south dakota", "tennessee", "texas", "utah", "vermont", "virginia",
+    "washington", "west virginia", "wisconsin", "wyoming", "puerto rico",
+    # Deliberately not "georgia": the country collides with the state, and the
+    # state's own cities (Atlanta, Savannah) carry the signal anyway.
+)
+
+# Bare foreign city names, for postings that give a city and nothing else.
+#
+# Kept short and one-sided on purpose. Being wrong in the non-US direction
+# drops a real US posting silently, which is the failure this file keeps being
+# fixed for; being wrong the other way costs one noisy alert. So a city is only
+# listed when its US namesake is a village at most -- Prague OK is ~2,400
+# people, Milan and Lodz smaller still.
+#
+# Deliberately excluded despite appearing in current board data: Berlin
+# (Berlin CT, ~20k), Amsterdam (Amsterdam NY, ~18k), Warsaw (Warsaw IN, ~16k)
+# and Dublin (Dublin CA and Dublin OH, both large). Those keep defaulting to US.
+NON_US_CITIES = (
+    "prague", "milano", "kuala lumpur", "lodz", "tianjin", "wuxi", "oslo",
+    "sofia", "toronto", "mississauga", "longueuil", "bengaluru", "gurgaon",
+    "shenzhen", "guangzhou", "hyderabad", "pune", "zurich", "munich",
+    "stockholm", "copenhagen", "helsinki", "lisbon", "budapest", "bucharest",
+)
+
+# Word-boundary matching, not substring. "india" is a substring of "Indiana",
+# so every Indiana posting whose location lacked a "US" token -- the ordinary
+# "Indianapolis, Indiana" shape Greenhouse and friends emit -- was classified
+# non-US and dropped without a trace.
+_HINT_RE = re.compile(
+    r"\b(" + "|".join(re.escape(h) for h in NON_US_HINTS + NON_US_CITIES) + r")\b",
+    re.IGNORECASE,
+)
+_STATE_RE = re.compile(
+    r"\b(" + "|".join(re.escape(n) for n in US_STATE_NAMES) + r")\b",
+    re.IGNORECASE,
+)
+
+def _is_us_text(text: str) -> bool | None:
+    """Classify one free-text location as US (True), non-US (False), or
+    unrecognized (None). Handles both 'City, ST' and hyphenated
+    'City-State-US' forms (Workday job paths use the latter)."""
+    low = text.lower().replace("-", " ")
+    if "united states" in low or re.search(r"\bus\b", low):
+        return True
+    if _HINT_RE.search(low):
+        return False
+    # Spelled-out state names count as a confident yes, not just the two-letter
+    # codes. "Austin, Texas" used to fall through to the default-to-US rule,
+    # which gave the right answer for the wrong reason and told us nothing.
+    if _STATE_RE.search(low):
+        return True
+    last = re.split(r"[,\s]+", text.strip())[-1] if text.strip() else ""
+    if last.upper() in US_STATE_ABBRS:
+        return True
+    return None
+
+def is_us_location(locations: list[str], country: str = "") -> bool:
+    """True unless there's a confident non-US signal. `country` (an ISO
+    alpha-2/alpha-3 code or full name straight from a platform's own API), when
+    given, is authoritative; otherwise falls back to free-text heuristics on
+    `locations`. Unrecognized/missing input defaults to True -- a formatting
+    quirk should never silently drop a real US posting."""
+    if country:
+        return country.strip().lower() in ("us", "usa", "united states", "united states of america")
+    results = [_is_us_text(loc) for loc in locations if loc and loc.strip()]
+    if any(r is True for r in results):
+        return True
+    if results and all(r is False for r in results):
+        return False
+    return True
+
+def is_target_season(listing: dict) -> bool:
+    """Only Summer 2027. Repo data doesn't reliably tag a year per-listing --
+    e.g. vanshb03's cycle repo bundles Winter/Spring/Summer/Fall postings under
+    one bare 'season' word with no year field -- so we trust the season word
+    and only use an explicit year mention as a safety net to drop clearly
+    stale listings."""
+    terms = [t for t in (listing.get("terms") or []) if t and t.upper() != "N/A"]
+    if not terms and listing.get("season"):
+        terms = [str(listing["season"])]
+    text = f"{' '.join(terms)} {listing.get('title', '')}".lower()
+    if TARGET_SEASON not in text:
+        return False
+    years = re.findall(r"\b(?:19|20)\d{2}\b", text)
+    return not years or TARGET_YEAR in years
+
+SEASON_RANK = {"summer": 0, "fall": 1, "winter": 2, "spring": 3}
+
+def content_key(listing: dict) -> str:
+    """Cross-source dedup key: same real job in both repos gets the same key even
+    though each repo assigns it a different id/url. Company + title, normalized."""
+    c = re.sub(r"[^a-z0-9]", "", listing.get("company_name", "").lower())
+    t = re.sub(r"[^a-z0-9]", "", listing.get("title", "").lower())
+    return f"{c}|{t}"
+
+def season(listing: dict) -> tuple[int, str]:
+    """Return (sort_rank, display_label) — summer sorts first. Label prefers the
+    term with its year (e.g. 'Summer 2026'); falls back to the title's season word."""
+    terms = [t for t in (listing.get("terms") or []) if t and t.upper() != "N/A"]
+    if not terms and listing.get("season"):   # CSCareers uses a bare season word
+        terms = [str(listing["season"])]
+    text = f"{' '.join(terms)} {listing.get('title', '')}".lower()
+    for key in ("summer", "fall", "autumn", "winter", "spring"):
+        if key in text:
+            k = "fall" if key == "autumn" else key
+            label = next((t for t in terms if k in t.lower()), k.capitalize())
+            return SEASON_RANK[k], label
+    return 9, (terms[0] if terms else "")
+
+# Whether a title is a software-engineering internship. Lives here rather than in
+# check_companies.py because both lanes need it now: the board lane to decide what
+# to alert on, and log_found's callers to keep non-software roles (marketing, PM,
+# electrical) out of the spreadsheet. check_companies.py imports it back from here.
+SWE_RE = re.compile(
+    r"\b(software engineer(ing)?|swe|sde|"
+    # Bare "software development" / "software dev" count too. The old form was
+    # "software dev(elopment)? engineer", which required the word "engineer" and
+    # so missed Intel's "Software Development Graduate Intern" outright.
+    r"software dev(eloper|elopment)?|"
+    r"full[- ]?stack|back[- ]?end engineer|front[- ]?end engineer|"
+    r"site reliability engineer|platform engineer|"
+    # Adjacent roles worth hearing about, nearly all at companies already on the
+    # watchlist: AMD firmware, TikTok/ByteDance ML, IBM data engineering. Kept
+    # tight on purpose -- a bare "embedded" or "data" would drag in the hardware
+    # and analytics reqs these boards are full of.
+    r"machine learning|ml engineer|ai engineer|applied ai|"
+    r"data engineer|firmware|embedded (software|systems|engineer))\b",
+    re.IGNORECASE,
+)
+INTERN_RE = re.compile(r"\bintern(ship)?\b", re.IGNORECASE)
+
+def is_swe_intern(title: str) -> bool:
+    return bool(INTERN_RE.search(title) and SWE_RE.search(title))
+
+def log_found(entries: list[dict]) -> None:
+    """Append matched listings to FOUND_LOG for the daily sheet sync to drain.
+
+    Called on every alerting run of either lane. Deliberately not deduped here:
+    both lanes can legitimately find the same role, and sheet_sync.py already
+    has to dedup against the spreadsheet itself -- one dedup in one place beats
+    two that can disagree.
+    """
+    if not entries:
+        return
+    STATE_DIR.mkdir(exist_ok=True)
+    log: list[dict] = []
+    if FOUND_LOG.exists():
+        try:
+            log = json.loads(FOUND_LOG.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, ValueError):
+            print("found_log.json unreadable, starting a fresh one", file=sys.stderr)
+    stamp = datetime.now(timezone.utc).isoformat()
+    log.extend({**e, "found_at": stamp} for e in entries)
+    FOUND_LOG.write_text(json.dumps(log[-FOUND_LOG_MAX:], indent=1), encoding="utf-8")
+    print(f"logged {len(entries)} match(es) for the sheet sync")
