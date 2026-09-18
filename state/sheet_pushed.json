@@ -1,5 +1,6 @@
 [
  "adobe|machine learning",
+ "amd|ai model optimization",
  "amd|machine learning system",
  "american express|data enterprise services",
  "axon|embedded",
@@ -9,6 +10,7 @@
  "capital one|ai",
  "coinbase|data",
  "coinbase|machine learning",
+ "fidelity national information services|fis",
  "google|multiple teams",
  "hermeus|command control",
  "hermeus|modeling simulation multiple teams",
@@ -24,9 +26,15 @@
  "stripe|or",
  "stryker|multiple teams",
  "tesla|embedded optimus",
+ "tesla|people products",
  "tesla|vehicle",
  "tiktok|machine learning e commerce knowledge graph",
+ "tiktok|machine learning e commerce recommendation mall",
+ "visa|sophomore",
  "walmart|2",
  "waymo|behavior test ms",
+ "waymo|machine learning computer vision",
+ "waymo|ms phd",
+ "waymo|quantitative",
  "zipline|embedded systems"
 ]
