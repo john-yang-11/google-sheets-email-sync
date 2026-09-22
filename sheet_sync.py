@@ -60,6 +60,12 @@ TIMEOUT = 30
 # Q: adding one column to the sheet would otherwise start writing notes into
 # whatever now sits in Q, silently, on a file with a year of hand-entered data.
 NOTE_HEADER = "apps open"
+# Where the mail-derived facts go. Fixed rather than looked up by header text:
+# the "appilied?" header is misspelled in the sheet and "result" is too common a
+# word to match on safely, so the positions are pinned and asserted instead.
+APPLIED_COL = 2          # C, headed "appilied?"
+RESULT_COL = 5           # F, headed "result"
+APPLICATIONS = STATE_DIR / "applications.json"
 # Amazon alone posts dozens of team-specific SWE intern reqs a cycle, and each
 # one is a "more specific role" by the rule above -- left uncapped, one busy
 # day would bury the sheet in Amazon rows. Anything over the cap is simply not
@@ -141,6 +147,26 @@ def pick_company_row(company: str, rows: list[list[str]]) -> int | None:
         aw = norm_words(cell_a)
         if aw == cw or _has_run(cw, aw):      # row name equal to, or a short form of
             hits.append(i)
+    return hits[0] if len(hits) == 1 else None
+
+
+def lookup_application(company: str, apps: dict) -> dict | None:
+    """The mail record for this company, matched the same way sheet rows are.
+
+    Exact normalised name first, then a whole-word-run match in either direction,
+    so "Dell Technologies" from a job feed finds a "Dell" mail record and vice
+    versa. Ambiguous matches return nothing rather than guessing.
+    """
+    if not company or not apps:
+        return None
+    want = norm_words(company)
+    if not want:
+        return None
+    for name, entry in apps.items():
+        if norm_words(name) == want:
+            return entry
+    hits = [e for name, e in apps.items()
+            if _has_run(norm_words(name), want) or _has_run(want, norm_words(name))]
     return hits[0] if len(hits) == 1 else None
 
 
@@ -355,14 +381,31 @@ def main() -> None:
 
     today = datetime.now(timezone.utc)
     note = f"OPEN NOW (found {today.month}/{today.day})"
-    width = max(2, note_col + 1 if note_col is not None else 2)
+    width = max(2, max(n for n in (note_col, APPLIED_COL, RESULT_COL)
+                       if n is not None) + 1)
+    apps = load_json(APPLICATIONS, {})
 
     def as_row(p: dict) -> list[str]:
-        """One sheet row: company, role, and the note in its own column."""
+        """One sheet row: company, role, the note, and what the mail says.
+
+        If scan_mail.py saw an application confirmation from this company, the
+        date it arrived goes in `appilied?` and the outcome in `result`, so a row
+        for a job you already applied to does not land looking untouched.
+        """
         cells = [""] * width
         cells[0], cells[1] = p["company"], p["program"]
         if note_col is not None:
             cells[note_col] = note
+        entry = lookup_application(p["company"], apps)
+        if entry:
+            when = entry.get("applied") or entry.get("rejected")
+            if when:
+                y, m, d = when.split("-")
+                cells[APPLIED_COL] = f"{int(m)}/{int(d)}"
+            if entry.get("rejected"):
+                cells[RESULT_COL] = "rejected"
+            elif entry.get("applied"):
+                cells[RESULT_COL] = "applied"
         return cells
 
     if dry_run:

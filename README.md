@@ -9,8 +9,15 @@ internship repos for newly-posted Summer-2027 US software internships, then adds
 the ones the sheet doesn't already track.
 
 ```
-scan_listings.py  -> state/found_log.json -> sheet_sync.py -> the spreadsheet
+scan_listings.py -> state/found_log.json
+scan_mail.py     -> state/applications.json
+                        |
+                        v
+                   sheet_sync.py -> the spreadsheet
 ```
+
+A row inserted for a job you have already applied to arrives with the date
+and outcome already filled in, rather than looking untouched.
 
 Companion to [job-alert](https://github.com/john-yang-11/job-alert), which
 watches the same feeds and sends the Discord/Poke alerts. That repo is untouched
@@ -97,9 +104,30 @@ python sheet_sync.py --no-cap                 # write them all in one run
 `--no-cap` is for draining a backfill window. Never use it on the schedule; the
 caps are what stop one busy day burying the sheet.
 
-## What this does NOT do
+## Application mail
 
-The `applied?` / `when` / `result` columns are filled from Gmail — application
-confirmations and rejection emails — and that **cannot run here**. The service
-account has no access to anyone's mail, and giving it some means separate Gmail
-OAuth. Those columns are updated by hand.
+`scan_mail.py` reads application confirmations and rejections and records, per
+company, when you applied and how it went (`state/applications.json`).
+`sheet_sync.py` reads that when building a row and fills `appilied?` (col C) and
+`result` (col F).
+
+This needs **its own credentials**. The service account that writes the
+spreadsheet has no mailbox and cannot be given one, so reading mail means
+authenticating as the mailbox owner: `python gmail_oauth_setup.py <id> <secret>`,
+then add `GMAIL_CLIENT_ID`, `GMAIL_CLIENT_SECRET` and `GMAIL_REFRESH_TOKEN` as
+repo secrets. The scope is `gmail.readonly`, so it can never send or delete.
+
+Without those secrets the mail step is skipped and the rest still runs, just
+without dates. It is also `continue-on-error`: a lapsed Gmail token must not stop
+new listings reaching the sheet.
+
+`mailparse.py` does the classification, and is pure functions over headers and
+snippet so it can be tested against real mail without credentials. Against a
+26-message sample it got **26/26 statuses and 23/26 company names**; the misses
+are Workday tenant abbreviations (`fmr@myworkday.com` is Fidelity) and a student
+club. Misses are safe by construction: **mail never creates a row**, so an
+unrecognised company means a blank cell, never a wrong one.
+
+Rejections are tested before confirmations on purpose. Nearly every rejection
+opens by thanking you for applying, so checking confirmations first labelled the
+entire rejection pile "applied".

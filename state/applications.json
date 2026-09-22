@@ -1,0 +1,512 @@
+{
+ "AT&T": {
+  "applied": "2026-09-15",
+  "interview": "2026-09-17",
+  "rejected": null
+ },
+ "Activision Blizzard": {
+  "applied": "2026-09-10",
+  "interview": null,
+  "rejected": null
+ },
+ "Adobe": {
+  "applied": "2026-09-03",
+  "interview": null,
+  "rejected": null
+ },
+ "Amazon": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "Anduril": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "Apex": {
+  "applied": "2026-09-05",
+  "interview": null,
+  "rejected": null
+ },
+ "Axon": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-07-28"
+ },
+ "BD": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-05-24"
+ },
+ "Boeing": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-04"
+ },
+ "Boston Scientific": {
+  "applied": "2026-09-14",
+  "interview": null,
+  "rejected": null
+ },
+ "CME Group": {
+  "applied": "2026-09-20",
+  "interview": null,
+  "rejected": null
+ },
+ "Capital One": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-05"
+ },
+ "Coinbase": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "ConductorAI": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "DENSO": {
+  "applied": "2026-09-16",
+  "interview": null,
+  "rejected": null
+ },
+ "DICKS Sporting Goods": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "DRW": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-07"
+ },
+ "Datadog": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "Dell Technologies": {
+  "applied": "2026-09-14",
+  "interview": null,
+  "rejected": null
+ },
+ "DoorDash": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": null
+ },
+ "DraftKings": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-09-17"
+ },
+ "Dropbox": {
+  "applied": "2026-09-07",
+  "interview": null,
+  "rejected": null
+ },
+ "Duolingo": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": "2026-09-18"
+ },
+ "Electronic Arts": {
+  "applied": "2026-09-22",
+  "interview": null,
+  "rejected": null
+ },
+ "Epic Games": {
+  "applied": "2026-09-10",
+  "interview": null,
+  "rejected": "2026-08-25"
+ },
+ "Epic Systems": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": null
+ },
+ "Fidelity": {
+  "applied": "2026-09-21",
+  "interview": null,
+  "rejected": null
+ },
+ "Fidelity National Information Services": {
+  "applied": "2026-09-18",
+  "interview": null,
+  "rejected": null
+ },
+ "Figma": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": null
+ },
+ "GE Vernova": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "GM": {
+  "applied": "2026-09-22",
+  "interview": null,
+  "rejected": null
+ },
+ "Gallup": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-09-10"
+ },
+ "Gecko Robotics": {
+  "applied": "2026-09-16",
+  "interview": null,
+  "rejected": null
+ },
+ "Gemini": {
+  "applied": "2026-09-20",
+  "interview": null,
+  "rejected": null
+ },
+ "Hadrian": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-09-07"
+ },
+ "Hershey": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-09-06"
+ },
+ "Honeywell": {
+  "applied": "2026-09-18",
+  "interview": null,
+  "rejected": null
+ },
+ "IBM": {
+  "applied": "2026-09-03",
+  "interview": null,
+  "rejected": "2026-09-11"
+ },
+ "IEX": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Immuta": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Impulse": {
+  "applied": "2026-09-10",
+  "interview": null,
+  "rejected": null
+ },
+ "JPMorgan Chase": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-09-02"
+ },
+ "Jane Street": {
+  "applied": "2026-09-11",
+  "interview": null,
+  "rejected": null
+ },
+ "John Deere": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "Kensho": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Keystone": {
+  "applied": "2026-09-17",
+  "interview": null,
+  "rejected": null
+ },
+ "Klaviyo": {
+  "applied": "2026-09-14",
+  "interview": null,
+  "rejected": "2026-09-18"
+ },
+ "Labcorp": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": null
+ },
+ "Leidos": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Lennox": {
+  "applied": "2026-09-18",
+  "interview": null,
+  "rejected": null
+ },
+ "MathWorks": {
+  "applied": null,
+  "interview": "2026-09-15",
+  "rejected": null
+ },
+ "Medtronic": {
+  "applied": "2026-09-07",
+  "interview": null,
+  "rejected": null
+ },
+ "Mercury": {
+  "applied": "2026-09-21",
+  "interview": null,
+  "rejected": null
+ },
+ "Micron": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "Microsoft": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": "2026-09-15"
+ },
+ "Millennium": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-10"
+ },
+ "National Security Agency": {
+  "applied": null,
+  "interview": "2026-09-21",
+  "rejected": null
+ },
+ "Neighbor": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-09-03"
+ },
+ "Nokia": {
+  "applied": "2026-09-20",
+  "interview": null,
+  "rejected": null
+ },
+ "Nominal": {
+  "applied": "2026-09-11",
+  "interview": null,
+  "rejected": null
+ },
+ "Northrop Grumman": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-27"
+ },
+ "Notion": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Nuro": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-07-29"
+ },
+ "OnePay": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Origami Risk": {
+  "applied": "2026-09-18",
+  "interview": null,
+  "rejected": null
+ },
+ "PACCAR": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-05-20"
+ },
+ "PIMCO": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-25"
+ },
+ "Palantir": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": "2026-07-17"
+ },
+ "Pega": {
+  "applied": "2026-09-05",
+  "interview": null,
+  "rejected": null
+ },
+ "PepsiCo": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "Peraton": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "Plaid": {
+  "applied": "2026-09-17",
+  "interview": null,
+  "rejected": null
+ },
+ "Primer": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "PrizePicks": {
+  "applied": "2026-09-22",
+  "interview": null,
+  "rejected": null
+ },
+ "Q2": {
+  "applied": "2026-09-17",
+  "interview": null,
+  "rejected": null
+ },
+ "Rendezvous Robotics": {
+  "applied": "2026-09-16",
+  "interview": null,
+  "rejected": null
+ },
+ "Revel": {
+  "applied": "2026-09-09",
+  "interview": null,
+  "rejected": null
+ },
+ "Rippling": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-07-08"
+ },
+ "Robinhood": {
+  "applied": "2026-09-14",
+  "interview": null,
+  "rejected": null
+ },
+ "Samsara": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-05"
+ },
+ "Scale AI": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "Scalp Trade": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": null
+ },
+ "Shield AI": {
+  "applied": "2026-09-11",
+  "interview": null,
+  "rejected": null
+ },
+ "Stoke Space": {
+  "applied": "2026-09-04",
+  "interview": null,
+  "rejected": null
+ },
+ "Superhuman": {
+  "applied": "2026-09-15",
+  "interview": null,
+  "rejected": null
+ },
+ "Talos": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": "2026-09-10"
+ },
+ "Tesla": {
+  "applied": "2026-09-10",
+  "interview": null,
+  "rejected": null
+ },
+ "Texas Instruments": {
+  "applied": "2026-09-12",
+  "interview": null,
+  "rejected": null
+ },
+ "TikTok": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-06"
+ },
+ "Together AI": {
+  "applied": "2026-09-20",
+  "interview": null,
+  "rejected": null
+ },
+ "Trillium": {
+  "applied": null,
+  "interview": null,
+  "rejected": "2026-08-11"
+ },
+ "US Bank": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "Upbound": {
+  "applied": "2026-09-21",
+  "interview": null,
+  "rejected": null
+ },
+ "Veeam": {
+  "applied": "2026-09-11",
+  "interview": null,
+  "rejected": null
+ },
+ "Vercel": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "Visa": {
+  "applied": "2026-09-17",
+  "interview": null,
+  "rejected": "2026-09-19"
+ },
+ "Walmart": {
+  "applied": "2026-09-17",
+  "interview": null,
+  "rejected": null
+ },
+ "Waymo": {
+  "applied": "2026-09-14",
+  "interview": null,
+  "rejected": null
+ },
+ "Wellmark": {
+  "applied": "2026-09-11",
+  "interview": null,
+  "rejected": null
+ },
+ "Wells Fargo": {
+  "applied": "2026-09-14",
+  "interview": null,
+  "rejected": null
+ },
+ "Western Digital": {
+  "applied": "2026-09-08",
+  "interview": null,
+  "rejected": null
+ },
+ "Zipline": {
+  "applied": "2026-09-05",
+  "interview": null,
+  "rejected": null
+ }
+}

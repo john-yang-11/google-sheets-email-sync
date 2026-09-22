@@ -453,5 +453,47 @@
   "url": "https://ngc.wd1.myworkdayjobs.com/Northrop_Grumman_External_Site/job/United-States-Maryland-Baltimore/XMLNAME-2027-Embedded-Software-Engineer-Intern---Baltimore-MD_R10251464",
   "source": "scan",
   "found_at": "2026-09-21T00:00:00+00:00"
+ },
+ {
+  "company": "General Motors",
+  "title": "Software Engineer Intern - Digital Product: Software Engineering",
+  "url": "https://generalmotors.wd5.myworkdayjobs.com/en-CA/Careers_GM/job/Warren-Michigan-United-States-of-America/XMLNAME-2027-Summer-Intern---Digital-Product--Software-Engineering_JR-202620546",
+  "source": "scan",
+  "found_at": "2026-09-21T00:00:00+00:00"
+ },
+ {
+  "company": "Atlassian",
+  "title": "Machine Learning Intern",
+  "url": "https://campus-americas.icims.com/jobs/26268/machine-learning-intern%2c-2027-summer-u.s./job",
+  "source": "scan",
+  "found_at": "2026-09-21T22:08:59+00:00"
+ },
+ {
+  "company": "Northrop Grumman",
+  "title": "Software Engineer Intern - Navigation Intelligence and Connectivity Division",
+  "url": "https://ngc.wd1.myworkdayjobs.com/Northrop_Grumman_External_Site/job/United-States-California-San-Diego/XMLNAME-2027-Software-Engineer-Intern---San-Diego-CA_R10252150",
+  "source": "scan",
+  "found_at": "2026-09-22T00:00:00+00:00"
+ },
+ {
+  "company": "Waymo",
+  "title": "Embedded Intern - Software Engineer",
+  "url": "https://careers.withwaymo.com/jobs?gh_jid=8221198",
+  "source": "scan",
+  "found_at": "2026-09-22T01:37:24+00:00"
+ },
+ {
+  "company": "Waymo",
+  "title": "Software Engineer Intern - MS/PhD - Simulation",
+  "url": "https://careers.withwaymo.com/jobs?gh_jid=8221851",
+  "source": "scan",
+  "found_at": "2026-09-22T01:37:25+00:00"
+ },
+ {
+  "company": "Waymo",
+  "title": "Software Engineer Intern - Simulation Evaluation ML Model",
+  "url": "https://careers.withwaymo.com/jobs?gh_jid=8221795",
+  "source": "scan",
+  "found_at": "2026-09-22T01:37:25+00:00"
  }
 ]

@@ -37,6 +37,18 @@ jobs:
           WATCHLIST_CSV_URL: ${{ secrets.WATCHLIST_CSV_URL }}
         run: python scan_listings.py --days ${{ github.event.inputs.days || '2' }}
 
+      # Optional: without the GMAIL_* secrets this is skipped and the sync still
+      # runs, just without applied dates. continue-on-error because a lapsed
+      # Gmail token must not stop new listings reaching the sheet.
+      - name: Scan application mail
+        if: ${{ secrets.GMAIL_REFRESH_TOKEN != '' }}
+        continue-on-error: true
+        env:
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+        run: python scan_mail.py --days 30
+
       - name: Sync to Google Sheet
         env:
           GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
