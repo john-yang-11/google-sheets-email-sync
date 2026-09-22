@@ -22,6 +22,12 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    # Job-level so the mail step's `if:` can read them; a step-level `if:` cannot
+    # see the secrets context at all.
+    env:
+      GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+      GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+      GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
     steps:
       - uses: actions/checkout@v7
 
@@ -40,13 +46,13 @@ jobs:
       # Optional: without the GMAIL_* secrets this is skipped and the sync still
       # runs, just without applied dates. continue-on-error because a lapsed
       # Gmail token must not stop new listings reaching the sheet.
+      #
+      # The condition reads `env`, not `secrets`: the secrets context is not
+      # available in a step-level `if:`, and using it there is a parse error that
+      # takes the whole workflow down, scheduled runs included.
       - name: Scan application mail
-        if: ${{ secrets.GMAIL_REFRESH_TOKEN != '' }}
+        if: env.GMAIL_REFRESH_TOKEN != ''
         continue-on-error: true
-        env:
-          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
-          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
-          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
         run: python scan_mail.py --days 30
 
       - name: Sync to Google Sheet
