@@ -754,5 +754,47 @@
   "url": "https://job-boards.greenhouse.io/riotgamesup/jobs/8222015",
   "source": "scan",
   "found_at": "2026-10-01T22:37:48+00:00"
+ },
+ {
+  "company": "General Motors",
+  "title": "Software Engineer Intern - AV/AI Platform",
+  "url": "https://generalmotors.wd5.myworkdayjobs.com/en-CA/Careers_GM/job/GM-Automation---Sunnyvale---GM-Automation---Sunnyvale/XMLNAME-2027-Summer-Intern---Software-Engineer--AV-AI-Platform_JR-202621696",
+  "source": "scan",
+  "found_at": "2026-10-02T00:00:00+00:00"
+ },
+ {
+  "company": "General Motors",
+  "title": "Machine Learning Engineer Intern - AV/AI Platform",
+  "url": "https://generalmotors.wd5.myworkdayjobs.com/en-CA/Careers_GM/job/Sunnyvale-California-United-States-of-America/XMLNAME-2027-Summer-Intern---Machine-Learning-Engineer--AV-AI-Platform_JR-202621695",
+  "source": "scan",
+  "found_at": "2026-10-02T00:00:00+00:00"
+ },
+ {
+  "company": "Leidos",
+  "title": "Software Developer Intern",
+  "url": "https://leidos.wd5.myworkdayjobs.com/External/job/Annapolis-Junction-MD/Software-Developer-Intern_R-00193804",
+  "source": "scan",
+  "found_at": "2026-10-02T00:00:00+00:00"
+ },
+ {
+  "company": "Affirm",
+  "title": "Software Engineer Intern - Summer 2027",
+  "url": "https://job-boards.greenhouse.io/affirm/jobs/8011590003",
+  "source": "scan",
+  "found_at": "2026-10-02T22:12:57+00:00"
+ },
+ {
+  "company": "Affirm",
+  "title": "Software Engineer Intern - Machine Learning",
+  "url": "https://job-boards.greenhouse.io/affirm/jobs/8008645003",
+  "source": "scan",
+  "found_at": "2026-10-02T22:12:58+00:00"
+ },
+ {
+  "company": "Databricks",
+  "title": "Software Engineer Intern",
+  "url": "https://boards.greenhouse.io/embed/job_app?token=8847738002",
+  "source": "scan",
+  "found_at": "2026-10-02T22:35:36+00:00"
  }
 ]
