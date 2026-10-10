@@ -84,5 +84,7 @@
  "waymo|planner machine learning",
  "waymo|quantitative",
  "waymo|simulation evaluation ml model",
- "zipline|embedded systems"
+ "workday|machine learning",
+ "zipline|embedded systems",
+ "zipline|firmware"
 ]
