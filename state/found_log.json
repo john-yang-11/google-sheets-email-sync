@@ -1384,5 +1384,26 @@
   "url": "https://go.vansh.nyc/BP",
   "source": "scan",
   "found_at": "2026-10-26T08:48:49+00:00"
+ },
+ {
+  "company": "Apple",
+  "title": "Software Engineer Intern, Core OS",
+  "url": "https://go.vansh.nyc/W1",
+  "source": "scan",
+  "found_at": "2026-10-26T14:27:29+00:00"
+ },
+ {
+  "company": "Visa",
+  "title": "Sophomore Program Software Engineer Intern",
+  "url": "https://go.vansh.nyc/VE",
+  "source": "scan",
+  "found_at": "2026-10-27T00:00:00+00:00"
+ },
+ {
+  "company": "Lockheed Martin",
+  "title": "Software Engineer Intern",
+  "url": "https://go.vansh.nyc/UC",
+  "source": "scan",
+  "found_at": "2026-10-27T01:47:45+00:00"
  }
 ]
