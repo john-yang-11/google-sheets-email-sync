@@ -1559,5 +1559,33 @@
   "url": "https://go.vansh.nyc/10o",
   "source": "scan",
   "found_at": "2026-10-30T03:05:55+00:00"
+ },
+ {
+  "company": "Nintendo",
+  "title": "Software Engineer Intern, Graphics",
+  "url": "https://go.vansh.nyc/121",
+  "source": "scan",
+  "found_at": "2026-10-30T00:00:00+00:00"
+ },
+ {
+  "company": "Stripe",
+  "title": "Machine Learning Engineer Intern",
+  "url": "https://stripe.com/jobs/search?gh_jid=8328662",
+  "source": "scan",
+  "found_at": "2026-10-30T16:19:28+00:00"
+ },
+ {
+  "company": "Amazon",
+  "title": "Software Engineer Intern - Machine Learning/Automated Reasoning",
+  "url": "https://amazon.jobs/en/jobs/10593521/software-development-engineer-intern-machine-learning-automated-reasoning-summer-2027",
+  "source": "scan",
+  "found_at": "2026-10-30T22:26:57+00:00"
+ },
+ {
+  "company": "NVIDIA",
+  "title": "Software Engineering Intern",
+  "url": "https://go.vansh.nyc/12g",
+  "source": "scan",
+  "found_at": "2026-10-31T12:05:59+00:00"
  }
 ]
